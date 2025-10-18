@@ -73,12 +73,12 @@ CEL2CLI is built with a clean, layered architecture ensuring maintainability, te
 │  └────────────────────────────────────────────────┘  │
 └──────────────────────────────────────────────────────┘
           │              │              │
-┌─────────┴──────┐  ┌───┴────┐  ┌──────┴──────┐
-│   STDLIB       │  │SECURITY│  │   ADAPTER   │
-│  - agents.*    │  │ - RBAC │  │ - Protocol  │
-│  - system.*    │  │ - Audit│  │ - HTTP      │
-│  - utils.*     │  │        │  │ - Mock      │
-└────────────────┘  └────────┘  └─────────────┘
+┌─────────┴──────┐  ┌────┴──────┐  ┌────┴────────┐
+│   STDLIB       │  │  SECURITY │  │   ADAPTER   │
+│   - agents.*   │  │  - RBAC   │  │ - Protocol  │
+│   - system.*   │  │  - Audit  │  │ - HTTP      │
+│   - utils.*    │  │           │  │ - Mock      │
+└────────────────┘  └───────────┘  └─────────────┘
           │              │              │
 ┌─────────┴──────────────┴──────────────┴─────────┐
 │                  CORE LAYER                     │
