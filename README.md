@@ -17,9 +17,9 @@ CEL2CLI provides a unified, secure, and observable interface for controlling AI 
 
 **Key Features:**
 - 🤖 **Unified Agent Control** - Manage agents on LangGraph, CrewAI, AutoGen, n8n, and more through a single language
-- 🔒 **Enterprise-Grade Security** - RBAC, comprehensive audit logging, and "Deny by Default" security model
-- 💎 **Resilient & Observable** - Built-in retry for failed operations, partial failure handling, structured logging and metrics
-- 🎯 **Flexible Interfaces** - Interact via CLI, REST API, or interactive REPL
+- 🔒 **Enterprise-Grade Security** - RBAC, comprehensive audit logging, and a "Deny by Default" security model
+- 💎 **Resilient & Observable** - Built-in retry for failed operations, partial failure handling, structured logging, and metrics
+- 🎯 **Flexible Interfaces** - Interact via CLI, REST API, or an interactive REPL
 
 ---
 
@@ -27,10 +27,10 @@ CEL2CLI provides a unified, secure, and observable interface for controlling AI 
 
 Managing AI agents across different platforms is fragmented. Each platform has its own API, CLI, and operational model. CEL2CLI provides:
 
-- A **single expression language** for all platforms
-- A **consistent interface** regardless of backend technology
-- **Type-safe operations** with security built-in from the ground up
-- A complete **audit trail** for all agent operations, ensuring compliance and accountability
+- ✅ **A single expression language** for all your agent platforms
+- 🤝 **A consistent and unified interface** regardless of the backend technology
+- 🛡️ **Type-safe operations** with security built-in from the ground up
+- ✍️ **A complete audit trail** for all operations, ensuring compliance and accountability
 
 ---
 
@@ -51,47 +51,44 @@ cel2cli repl
 
 ---
 
-CEL2CLI is built with a clean, layered architecture ensuring maintainability, testability, and security:
+## 🏛️ Architecture
+
+CEL2CLI is built with a clean, layered architecture ensuring maintainability, testability, and security. Each layer has a distinct responsibility, communicating through well-defined interfaces.
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │                  PRESENTATION LAYER                         │
-│      (CLI, REST API, REPL - The entry point for users)      │
+│             (CLI, REST API, REPL - User Interface)          │
 └─────────────────────────────┬───────────────────────────────┘
-                              │ (Request)
-                              ▼
+                              │
 ┌─────────────────────────────────────────────────────────────┐
 │                     ENGINE LAYER                            │
-│     (CELEngine - Orchestrates the execution pipeline)       │
+│    (Orchestrator, Context & State Management, Caching)      │
 └─────────────────────────────┬───────────────────────────────┘
-                              │ (Uses services)
-                              ▼
-┌─────────────────────────────────────────────────────────────────────┐
-│                         SERVICE LAYER                               │
-│        (Modules providing specific functionality to Engine)         │
-│                                                                     │
-│  ┌──────────┐ ┌──────────┐ ┌───────────┐ ┌────────────┐ ┌────────┐  │
-│  │ STDLIB   │ │ SECURITY │ │  ADAPTER  │ │ STATE STORE│ │ CACHE│ │  │
-│  │ (Funcs)  │ │  (RBAC)  │ │(Platforms)│ │   (State)  │ │ (Perf) │  │  
-│  └──────────┘ └──────────┘ └───────────┘ └────────────┘ └────────┘  │
-└─────────────────────────────┬───────────────────────────────────────┘
-                              │ (Calls low-level operations)
-                              ▼
-┌─────────────────────────────────────────────────────────────┐
-│                     CORE LAYER                              │
-│   (Pure CEL Parsing, Type Checking, and Evaluation)         │
-│                                                             │
-│  ┌──────────┐   ┌───────────┐   ┌──────────┐                │
-│  │  Parser  │──▶│Type Checker│──▶│ Evaluator│              │
-│  └──────────┘   └───────────┘   └──────────┘                │
-└─────────────────────────────────────────────────────────────┘
+                              │ (Uses layers below)
+      ┌───────────────────────┼───────────────────────┐
+      │                       │                       │
+┌─────┴─────┐         ┌───────┴───────┐         ┌─────┴──────┐
+│  SECURITY │         │    STDLIB     │         │  ADAPTER   │
+│  (RBAC,   │         │ (agents.*,    │         │ (Protocol, │
+│   Audit)  │         │  system.*)    │         │ HTTP, Mock)│
+└───────────┘         └───────────────┘         └────────────┘
+      │                       │                       │
+      └───────────────┬───────────────────────────────┘
+                      │
+┌─────────────────────┴─────────────────────────────────────┐
+│                     CORE LAYER                            │
+│   (Pure CEL Processing: Parser, Type Checker, Evaluator)  │
+└───────────────────────────────────────────────────────────┘
 ```
 
 **Architecture Layers:**
 
 - **Presentation Layer** - User-facing interfaces (CLI, REST API, REPL)
-- **Engine Layer** - Central orchestrator managing execution pipeline
-- **Service Layer** - Specialized modules (stdlib, security, adapters, state, cache)
-- **Core Layer** - Pure CEL implementation (parser, type checker, evaluator)
+- **Engine Layer** - The central orchestrator that manages the execution pipeline, context, state, and caching
+- **Security Layer** - Handles Role-Based Access Control (RBAC) and audit logging
+- **Stdlib Layer** - Provides all built-in CEL functions (agents.*, system.*)
+- **Adapter Layer** - Provides the unified interface (AgentAdapter) for communicating with various agent platforms
+- **Core Layer** - The pure heart of CEL processing (parser, type checker, evaluator)
 
 **Full architecture documentation:** [Coming soon]
 
