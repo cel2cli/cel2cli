@@ -51,43 +51,47 @@ cel2cli repl
 
 ---
 
-## 🏗️ Architecture
-
 CEL2CLI is built with a clean, layered architecture ensuring maintainability, testability, and security:
 ```
-┌─────────────────────────────────────────────────────────┐
-│                  PRESENTATION LAYER                     │
-│  ┌──────────┐  ┌──────────┐  ┌──────────┐               │
-│  │   CLI    │  │   REST   │  │   REPL   │               │
-│  │  Click   │  │  FastAPI │  │  prompt  │               │
-│  └──────────┘  └──────────┘  └──────────┘               │
-└─────────────────────────────────────────────────────────┘
-                         │
-┌──────────────────────────────────────────────────────┐
-│                     ENGINE LAYER                     │
-│  ┌────────────────────────────────────────────────┐  │
-│  │       CELEngine (Orchestrator)                 │  │
-│  │  - Execute pipeline                            │  │
-│  │  - Retry functionality                         │  │
-│  │  - State tracking                              │  │
-│  └────────────────────────────────────────────────┘  │
-└──────────────────────────────────────────────────────┘
-          │              │              │
-┌─────────┴──────┐  ┌────┴──────┐  ┌────┴────────┐
-│   STDLIB       │  │  SECURITY │  │   ADAPTER   │
-│   - agents.*   │  │  - RBAC   │  │ - Protocol  │
-│   - system.*   │  │  - Audit  │  │ - HTTP      │
-│   - utils.*    │  │           │  │ - Mock      │
-└────────────────┘  └───────────┘  └─────────────┘
-          │              │              │
-┌─────────┴──────────────┴──────────────┴─────────┐
-│                  CORE LAYER                     │
-│  ┌────────┐  ┌─────────┐  ┌──────────┐          │
-│  │ Parser │  │  Type   │  │Evaluator │          │
-│  │        │  │ Checker │  │          │          │
-│  └────────┘  └─────────┘  └──────────┘          │
-└─────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────┐
+│                  PRESENTATION LAYER                         │
+│      (CLI, REST API, REPL - The entry point for users)      │
+└─────────────────────────────┬───────────────────────────────┘
+                              │ (Request)
+                              ▼
+┌─────────────────────────────────────────────────────────────┐
+│                     ENGINE LAYER                            │
+│     (CELEngine - Orchestrates the execution pipeline)       │
+└─────────────────────────────┬───────────────────────────────┘
+                              │ (Uses services)
+                              ▼
+┌─────────────────────────────────────────────────────────────────────┐
+│                         SERVICE LAYER                               │
+│        (Modules providing specific functionality to Engine)         │
+│                                                                     │
+│  ┌──────────┐ ┌──────────┐ ┌───────────┐ ┌────────────┐ ┌────────┐  │
+│  │ STDLIB   │ │ SECURITY │ │  ADAPTER  │ │ STATE STORE│ │ CACHE│ │  │
+│  │ (Funcs)  │ │  (RBAC)  │ │(Platforms)│ │   (State)  │ │ (Perf) │  │  
+│  └──────────┘ └──────────┘ └───────────┘ └────────────┘ └────────┘  │
+└─────────────────────────────┬───────────────────────────────────────┘
+                              │ (Calls low-level operations)
+                              ▼
+┌─────────────────────────────────────────────────────────────┐
+│                     CORE LAYER                              │
+│   (Pure CEL Parsing, Type Checking, and Evaluation)         │
+│                                                             │
+│  ┌──────────┐   ┌───────────┐   ┌──────────┐                │
+│  │  Parser  │──▶│Type Checker│──▶│ Evaluator│              │
+│  └──────────┘   └───────────┘   └──────────┘                │
+└─────────────────────────────────────────────────────────────┘
 ```
+
+**Architecture Layers:**
+
+- **Presentation Layer** - User-facing interfaces (CLI, REST API, REPL)
+- **Engine Layer** - Central orchestrator managing execution pipeline
+- **Service Layer** - Specialized modules (stdlib, security, adapters, state, cache)
+- **Core Layer** - Pure CEL implementation (parser, type checker, evaluator)
 
 **Full architecture documentation:** [Coming soon]
 
